@@ -77,11 +77,17 @@ class Calculator extends React.Component {
   handleClick(i) {
     if (i === "=") {
       this.handleEqualsClick();
+    } else if (i === "AC") {
+      this.handleACClick();
     } else if (typeof i === "number") {
       this.handleNumClick(i);
     } else {
       this.handleOpClick(i);
     }
+  }
+
+  handleACClick() {
+    this.setState({expr: ""});
   }
 
   handleNumClick(num) {
