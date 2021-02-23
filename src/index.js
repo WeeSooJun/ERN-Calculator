@@ -125,7 +125,7 @@ class Calculator extends React.Component {
   handleDotClick() {
     this.setState((prev, props) => {
       const new_expr = ALL_OP.includes(prev.expr.charAt(prev.expr.length-1)) ? prev.expr + 0 + "." : 
-        prev.expr.charAt(prev.expr.length-1) === "."? prev.expr : prev.expr + ".";
+        prev.expr.includes(".") ? prev.expr : prev.expr + ".";
       return { expr: new_expr };
     });
   }
