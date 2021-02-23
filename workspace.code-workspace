@@ -1,0 +1,11 @@
+{
+	"folders": [],
+	"settings": {
+		"emmet.preferences": {
+			"terminal.integrated.shellArgs.windows": [
+				"-ExecutionPolicy",
+				"Bypass"
+			]
+		}
+	}
+}
