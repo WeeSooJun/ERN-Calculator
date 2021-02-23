@@ -3,7 +3,7 @@ import ReactDOM from  'react-dom';
 import './index.css'
 
 const ALL_OP = ["+","-","/","*"];
-const INITIAL_EXPR = "0";
+const INITIAL_EXPR = ["0"];
 
 function Button(props) {
   return (
@@ -95,7 +95,8 @@ class Calculator extends React.Component {
 
   handleNumClick(num) {
     this.setState((prev, props) => {
-      const new_expr = prev.expr.charAt(0) === "0" && prev.expr.length === 1 ? String(num) : prev.expr + num;
+      let new_expr = ALL_OP.includes(prev.expr[prev.expr.length-1]) ? prev.expr.concat(["0"]) : prev.expr;
+      new_expr = new_expr[new_expr.length-1] === "0" ? new_expr.slice(0,new_expr.length-1).concat(String(num)) : new_expr.slice(0,new_expr.length-1).concat([new_expr[new_expr.length-1] + num]);
       return { expr: new_expr };
     });
   }
@@ -106,10 +107,10 @@ class Calculator extends React.Component {
     } else {
       this.setState((prev,prop) => {
         let new_expr;
-        if (ALL_OP.includes(prev.expr.charAt(prev.expr.length-1))) {
+        if (ALL_OP.includes(prev.expr[prev.expr.length-1])) {
           new_expr = prev.expr.slice(0,prev.length-1) + op;
         } else {
-          new_expr = prev.expr + op;
+          new_expr = prev.expr.concat([op]);
         }
         return { expr: new_expr };
       })
@@ -118,14 +119,14 @@ class Calculator extends React.Component {
 
   handleEqualsClick() {
     this.setState((prev, props) => ({
-      expr: String(eval(prev.expr))
+      expr: [String(eval(prev.expr.join("")))]
     }));
   }
 
   handleDotClick() {
     this.setState((prev, props) => {
-      const new_expr = ALL_OP.includes(prev.expr.charAt(prev.expr.length-1)) ? prev.expr + 0 + "." : 
-        prev.expr.includes(".") ? prev.expr : prev.expr + ".";
+      const new_expr = ALL_OP.includes(prev.expr[prev.expr.length-1]) ? prev.expr.concat("0.") : 
+        prev.expr[prev.expr.length-1].includes(".") ? prev.expr : prev.expr.slice(0,prev.expr.length-1).concat([prev.expr[prev.expr.length-1] + "."]);
       return { expr: new_expr };
     });
   }
@@ -134,7 +135,7 @@ class Calculator extends React.Component {
     return (
       <div className="calculator">
         <div className="calculator-board">
-          <Window value= {this.state.expr} />
+          <Window value= {this.state.expr.join("")} />
           <Board 
             onClick = {(i) => this.handleClick(i)}
           />
