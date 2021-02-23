@@ -3,6 +3,7 @@ import ReactDOM from  'react-dom';
 import './index.css'
 
 const ALL_OP = ["+","-","/","*"];
+const INITIAL_EXPR = "0";
 
 function Button(props) {
   return (
@@ -70,7 +71,7 @@ class Calculator extends React.Component {
   constructor(props) {
     super(props);
     this.state = { 
-      expr : ""
+      expr : INITIAL_EXPR
     };
   }
 
@@ -87,13 +88,15 @@ class Calculator extends React.Component {
   }
 
   handleACClick() {
-    this.setState({expr: ""});
+    this.setState({expr: INITIAL_EXPR});
   }
 
   handleNumClick(num) {
-    this.setState((prev, props) => ({
-      expr: prev.expr + num
-    }))
+    this.setState((prev, props) => {
+      let new_expr;
+      new_expr = prev.expr.charAt(0) === "0" ? String(num) : prev.expr + num;
+      return { expr: new_expr }
+    });
   }
 
   handleOpClick(op) {
