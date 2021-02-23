@@ -80,6 +80,8 @@ class Calculator extends React.Component {
       this.handleEqualsClick();
     } else if (i === "AC") {
       this.handleACClick();
+    } else if (i === ".") { 
+      this.handleDotClick();
     } else if (typeof i === "number") {
       this.handleNumClick(i);
     } else {
@@ -93,9 +95,8 @@ class Calculator extends React.Component {
 
   handleNumClick(num) {
     this.setState((prev, props) => {
-      let new_expr;
-      new_expr = prev.expr.charAt(0) === "0" ? String(num) : prev.expr + num;
-      return { expr: new_expr }
+      const new_expr = prev.expr.charAt(0) === "0" && prev.expr.length === 1 ? String(num) : prev.expr + num;
+      return { expr: new_expr };
     });
   }
 
@@ -118,7 +119,14 @@ class Calculator extends React.Component {
   handleEqualsClick() {
     this.setState((prev, props) => ({
       expr: String(eval(prev.expr))
-    }))
+    }));
+  }
+
+  handleDotClick() {
+    this.setState((prev, props) => {
+      const new_expr = ALL_OP.includes(prev.expr.charAt(prev.expr.length-1)) ? prev.expr + 0 + "." : prev.expr + ".";
+      return { expr: new_expr };
+    });
   }
 
   render() {
