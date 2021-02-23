@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from  'react-dom';
 import './index.css'
+import * as math from 'mathjs';
 
 const ALL_OP = ["+","-","/","*"];
 const INITIAL_EXPR = ["0"];
@@ -96,30 +97,37 @@ class Calculator extends React.Component {
   handleNumClick(num) {
     this.setState((prev, props) => {
       let new_expr = ALL_OP.includes(prev.expr[prev.expr.length-1]) ? prev.expr.concat(["0"]) : prev.expr;
-      new_expr = new_expr[new_expr.length-1] === "0" ? new_expr.slice(0,new_expr.length-1).concat(String(num)) : new_expr.slice(0,new_expr.length-1).concat([new_expr[new_expr.length-1] + num]);
+      new_expr = new_expr[new_expr.length-1] === "0" || new_expr[new_expr.length-1] === "-0" ? new_expr.slice(0,new_expr.length-1).concat(new_expr[new_expr.length-1].slice(0, new_expr[new_expr.length-1].length-1) + num) : new_expr.slice(0,new_expr.length-1).concat([new_expr[new_expr.length-1] + num]);
       return { expr: new_expr };
     });
   }
 
   handleOpClick(op) {
-    if (op === "-") {
-
-    } else {
-      this.setState((prev,prop) => {
-        let new_expr;
+    this.setState((prev,prop) => {
+      let new_expr;
+      if (op === "-") {
         if (ALL_OP.includes(prev.expr[prev.expr.length-1])) {
-          new_expr = prev.expr.slice(0,prev.length-1) + op;
+          new_expr = prev.expr.concat([op + "0"]);
+        } else if (prev.expr[prev.expr.length-1]=="-0") {
+          new_expr = prev.expr;
         } else {
           new_expr = prev.expr.concat([op]);
         }
-        return { expr: new_expr };
-      })
-    }
+      } else {
+        if (ALL_OP.includes(prev.expr[prev.expr.length-1])) {
+          new_expr = prev.expr.slice(0,prev.length-1).concat([op]);
+        } else {
+            new_expr = prev.expr.concat([op]);
+        }
+      }
+      console.log(new_expr);
+      return { expr: new_expr };
+    });
   }
 
   handleEqualsClick() {
     this.setState((prev, props) => ({
-      expr: [String(eval(prev.expr.join("")))]
+      expr: [String(math.evaluate(prev.expr.join("")))]
     }));
   }
 
