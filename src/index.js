@@ -115,9 +115,9 @@ class Calculator extends React.Component {
         }
       } else {
         if (ALL_OP.includes(prev.expr[prev.expr.length-1])) {
-          new_expr = prev.expr.slice(0,prev.length-1).concat([op]);
+          new_expr = prev.expr.slice(0,prev.expr.length-1).concat([op]);
         } else {
-            new_expr = prev.expr.concat([op]);
+          new_expr = prev.expr.concat([op]);
         }
       }
       console.log(new_expr);
@@ -126,9 +126,10 @@ class Calculator extends React.Component {
   }
 
   handleEqualsClick() {
-    this.setState((prev, props) => ({
-      expr: [String(math.evaluate(prev.expr.join("")))]
-    }));
+    this.setState((prev, props) => {
+      const new_expr = ALL_OP.includes(prev.expr[prev.expr.length-1]) ? prev.expr.slice(0, prev.expr.length-1) : prev.expr;
+      return { expr: [String(math.evaluate(new_expr.join("")))] }
+    });
   }
 
   handleDotClick() {
