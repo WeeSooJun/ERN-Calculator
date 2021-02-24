@@ -136,7 +136,7 @@ class Calculator extends React.Component {
       if (op === "-") {
         if (ALL_OP.includes(prev.expr[prev.expr.length-1])) {
           new_expr = prev.expr.concat([op + "0"]);
-        } else if (prev.expr[prev.expr.length-1]=="-0") {
+        } else if (prev.expr[prev.expr.length-1] ==="-0") {
           new_expr = prev.expr;
         } else {
           new_expr = prev.expr.concat([op]);
