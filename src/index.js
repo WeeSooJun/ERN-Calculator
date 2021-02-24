@@ -5,10 +5,34 @@ import * as math from 'mathjs';
 
 const ALL_OP = ["+","-","/","*"];
 const INITIAL_EXPR = ["0"];
+const numberToString = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
+
+function valueToID(value) {
+  if (typeof value === "number") {
+    return numberToString[value]
+  } else {
+    switch (value) {
+      case "AC":
+        return "AC";
+      case "+":
+        return "plus";
+      case "-":
+        return "minus";
+      case "*":
+        return "times";
+      case "/":
+        return "divide";
+      case ".":
+        return "decimal";
+      case "=":
+        return "equals";
+    }
+  }
+}
 
 function Button(props) {
   return (
-    <button className = "button" onClick={props.onClick}>
+    <button className = "button" onClick={props.onClick} id={valueToID(props.value)}>
       {props.value}
     </button>
   )
@@ -16,7 +40,7 @@ function Button(props) {
 
 function Window(props) {
   return (
-    <div className="window">
+    <div className="window" id="display">
       {props.value}
     </div>
   )
@@ -98,6 +122,10 @@ class Calculator extends React.Component {
     this.setState((prev, props) => {
       let new_expr = ALL_OP.includes(prev.expr[prev.expr.length-1]) ? prev.expr.concat(["0"]) : prev.expr;
       new_expr = new_expr[new_expr.length-1] === "0" || new_expr[new_expr.length-1] === "-0" ? new_expr.slice(0,new_expr.length-1).concat(new_expr[new_expr.length-1].slice(0, new_expr[new_expr.length-1].length-1) + num) : new_expr.slice(0,new_expr.length-1).concat([new_expr[new_expr.length-1] + num]);
+      if (new_expr.length === 1 && (new_expr[0].includes("Infinity") || new_expr[0].includes("NaN"))) {
+        new_expr = [String(num)];
+      }
+      console.log(new_expr);
       return { expr: new_expr };
     });
   }
